@@ -1,5 +1,6 @@
 package Basic2;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -8,6 +9,11 @@ import java.util.ArrayList;
  * Created by huchao on 2017/7/16.
  * 任务:
  * 1.通过反射机制实例化一个类的对象
+ *      {
+ *          反射创建对象的两种方法:
+ *              1.通过newInstance()直接创建
+ *              2.通过getConstructor()方法创建，先获得构造器对象，然后调用newInstance()方法
+ *      }
  * 2. 动态调用方法
  *      {
  *          1.首先通过反射获得Class类对象
@@ -21,11 +27,19 @@ public class Reflect2 {
     private String proprety  = null;
     public int height = 0;
 
-    //获取类的实例对象
+    //获取类的实例对象方法1
     public static void instanceObject(Class<?> u) throws Exception{
         User user = (User) u.newInstance();
         user.setAge(20);
         user.setName("阿狸");
+        System.out.println("我的名字叫"+user.getName()+",今年"+user.getAge());
+    }
+    //获取类的实例对象方法2
+    public static void instanceObject2(Class<?> u) throws Exception{
+        Constructor constructor = u.getConstructor();
+        User user = (User)constructor.newInstance();
+        user.setName("阿离");
+        user.setAge(25);
         System.out.println("我的名字叫"+user.getName()+",今年"+user.getAge());
     }
     //通过反射调用无参方法
@@ -55,7 +69,7 @@ public class Reflect2 {
 
     public static void main(String[] args) throws Exception{
         Class<?> clazz = Class.forName("Basic2.User");
-        Reflect2.instanceObject(clazz);
+        Reflect2.instanceObject2(clazz);
         Class<?> r = Class.forName("Basic2.Reflect2");
         Method m1 = r.getMethod("method1");
         Method m2 = r.getMethod("method2",int.class,String.class);
